@@ -86,7 +86,20 @@ export default function Home() {
       </Column>
       <Column width="30%">
         <Box>
-          <Section style={{ marginTop: 0 }} title="work experience"></Section>
+          <Section style={{ marginTop: 0 }} title="work experience">
+            <WorkTree>
+              <WorkEntry>
+                <Company>Notify Technology</Company>
+                <Position>Frontend Engineer & Designer</Position>
+                <Duration>Apr 2020 - present</Duration>
+              </WorkEntry>
+              <WorkEntry>
+                <Company>Bolteløkka Legesenter</Company>
+                <Position>Full Stack Developer & Designer</Position>
+                <Duration>Dec 2018 - present</Duration>
+              </WorkEntry>
+            </WorkTree>
+          </Section>
         </Box>
       </Column>
     </Container>
@@ -233,4 +246,84 @@ const Link = styled(Text).attrs({
 const Box = styled.div`
   box-shadow: 0px 4px 50px rgba(233, 233, 233, 0.51);
   padding: 2rem;
+`;
+
+const WorkTree = styled.ul`
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+`;
+
+const WorkEntry = styled.li`
+  position: relative;
+  font-family: 'Assistant';
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0 0 1rem 1rem;
+
+  :last-child {
+    margin-bottom: 0;
+  }
+
+  /* First child shouldn't have the long line linking to the element before */
+  :not(:first-child) {
+    &:before {
+      position: absolute;
+      content: '';
+      height: 84px;
+      width: 1px;
+      left: -15px;
+      top: -70px;
+      background: ${props => props.theme.bar};
+    }
+  }
+
+  &:before {
+    position: absolute;
+    content: '';
+    height: 15px;
+    width: 1px;
+    left: -15px;
+    top: -1px;
+    background: ${props => props.theme.bar};
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    transform: rotate(90deg);
+    height: 10px;
+    width: 1px;
+    top: 9px;
+    left: -10px;
+    background: ${props => props.theme.bar};
+  }
+`;
+
+const Company = styled(Text).attrs({
+  assistant: true,
+  semibold: true,
+})<any>`
+  margin-left: 0.25rem;
+  font-size: 20px;
+  color: ${props => props.theme.grayText};
+`;
+
+const Position = styled(Text).attrs({
+  assistant: true,
+})<any>`
+  margin-left: 0.25rem;
+  font-size: 17px;
+  color: ${props => props.theme.lightGrayText};
+`;
+
+const Duration = styled(Text).attrs({
+  assistant: true,
+  semibold: true,
+})<any>`
+  margin-left: 0.25rem;
+  font-size: 15px;
+  color: ${props => props.theme.lightGrayText};
+  text-transform: uppercase;
+  opacity: 0.5;
 `;
