@@ -14,7 +14,7 @@ export interface WorkTreeProps {
   positions: IPosition[];
 }
 
-export const WorkTree = ({ positions, className }: WorkTreeProps) => {
+export const WorkTree = ({ positions }: WorkTreeProps) => {
   return (
     <Container>
       {positions && positions.length > 0
