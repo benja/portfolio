@@ -6,6 +6,7 @@ import { useContext, useState, useEffect } from 'react';
 import { Text } from '../ui/components/Text';
 import { ITheme } from '../ui/themes';
 import { Section } from '../ui/components/Section';
+import { WorkTree, WorkTreeProps } from '../ui/components/WorkTree';
 
 interface ILink {
   text: string;
@@ -19,47 +20,60 @@ export default function Home() {
   const [links] = useState({
     socials: [
       {
-        text: '@mail',
+        text: 'Say hello',
         onClick: () => {
-          console.log('asd');
-        },
-      },
-      {
-        text: 'github',
-        onClick: () => {
-          console.log('asd');
+          window.location.assign('mailto:benjaminakar2001@gmail.com');
         },
       },
       {
         text: 'twitter',
         onClick: () => {
-          console.log('asd');
+          window.open('https://twitter.com/benjaminakar', '_blank');
+        },
+      },
+      {
+        text: 'github',
+        onClick: () => {
+          window.open('https://github.com/benja', '_blank');
         },
       },
     ],
     writings: [],
   });
 
+  // All previous work
+  const [positions] = useState([
+    {
+      company: 'Notify Technology, Inc.',
+      position: 'Frontend Engineer & Designer',
+      duration: 'Apr 2020 - present',
+    },
+    {
+      company: 'Bolteløkka Legesenter',
+      position: 'Full Stack Developer & Designer',
+      duration: 'Dec 2017 - present',
+    },
+  ]);
+
   return (
-    <Container>
-      <Column width="60%">
-        <Title>
-          Hey, I'm <Benja src="/images/benja.jpg" /> Benjamin
-        </Title>
+    <WidthLimit>
+      <Container>
+        <Left>
+          <Title>
+            Hey, I'm <Benja src="/images/benja.jpg" /> Benjamin
+          </Title>
 
-        {/* Some information about myself */}
-        <Section title="who am i">
-          <StyledText>
-            19-year-old from Oslo, Norway striving to <span>innovate</span> great solutions to modern day problems
-          </StyledText>
-          <StyledText>
-            I specialize within digital design and development, but any activity requiring problem solving and creative
-            thinking is where you will find me.
-          </StyledText>
-        </Section>
+          {/* Some information about myself */}
+          <Section title="who am i">
+            <StyledText>
+              19-year-old from Oslo, Norway striving to <span>innovate</span> great solutions to modern day problems
+            </StyledText>
+            <StyledText>
+              I specialize within digital design and development, but any activity requiring problem solving and
+              creative thinking is where you will find me.
+            </StyledText>
+          </Section>
 
-        {/* Social links */}
-        <Section title="find me online">
           <List direction="row">
             {links.socials.map((link: ILink, index: number) => (
               <Link key={index} onClick={link.onClick}>
@@ -67,56 +81,134 @@ export default function Home() {
               </Link>
             ))}
           </List>
-        </Section>
 
-        {/* My writings */}
-        <Section title="writing">
-          <List direction="column">
-            {links.writings.length > 0 ? (
-              links.writings.map((link: ILink, index: number) => (
-                <Link key={index} fontSize={20} onClick={link.onClick} noHover>
-                  <BorderBottom>{link.text}</BorderBottom>
-                </Link>
-              ))
-            ) : (
-              <StyledText>No writing found.</StyledText>
-            )}
-          </List>
-        </Section>
-      </Column>
-      <Column width="30%">
-        <Box>
-          <Section style={{ marginTop: 0 }} title="work experience">
-            <WorkTree>
-              <WorkEntry>
-                <Company>Notify Technology</Company>
-                <Position>Frontend Engineer & Designer</Position>
-                <Duration>Apr 2020 - present</Duration>
-              </WorkEntry>
-              <WorkEntry>
-                <Company>Bolteløkka Legesenter</Company>
-                <Position>Full Stack Developer & Designer</Position>
-                <Duration>Dec 2018 - present</Duration>
-              </WorkEntry>
-            </WorkTree>
-          </Section>
-        </Box>
-      </Column>
-    </Container>
+          {/* My writings */}
+          {links.writings.length > 0 && (
+            <Section title="writing">
+              <List direction="column">
+                {links.writings.map((link: ILink, index: number) => (
+                  <Link key={index} fontSize={20} onClick={link.onClick} noHover>
+                    <BorderBottom>{link.text}</BorderBottom>
+                  </Link>
+                ))}
+              </List>
+            </Section>
+          )}
+        </Left>
+        <Right>
+          <Box>
+            <Section style={{ marginTop: 0 }} title="work experience">
+              <WorkTree positions={positions} />
+            </Section>
+            <StyledText fontSize={15}>Contact me for more work references.</StyledText>
+          </Box>
+        </Right>
+      </Container>
+    </WidthLimit>
   );
 }
+
+const Left = styled.div<any>`
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+`;
+
+const Right = styled.div<any>`
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+`;
+
+const StyledText = styled(Text).attrs({
+  assistant: true,
+})`
+  color: ${props => props.theme.grayText};
+  white-space: pre-line;
+  line-height: 35px;
+  font-size: 23px;
+  margin-bottom: 0.55rem;
+
+  :last-child {
+    margin-bottom: 0;
+  }
+
+  span {
+    font-family: 'Assistant';
+    font-weight: 600;
+  }
+`;
+
+const Box = styled.div`
+  box-shadow: 0px 4px 50px rgba(233, 233, 233, 0.51);
+  padding: 2rem;
+  position: relative;
+
+  transition: 0.2s ease-in-out;
+  ${StyledText} {
+    opacity: 0;
+    margin-bottom: 0;
+    height: 0;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    transition: 0.2s ease-in-out;
+  }
+
+  &:hover {
+    ${StyledText} {
+      opacity: 0.5;
+    }
+  }
+`;
+
+const WidthLimit = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  width: 1500px;
+
+  @media (max-width: 1500px) {
+    width: 100%;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding: 5rem;
-`;
 
-const Column = styled.div<any>`
-  display: flex;
-  flex-direction: column;
-  width: ${props => props.width || '100%'};
+  @media (max-width: 1220px) {
+    ${Left} {
+      width: 50%;
+    }
+
+    ${Right} {
+      width: 40%;
+    }
+  }
+
+  @media (max-width: 950px) {
+    flex-direction: column;
+    padding: 3rem;
+
+    ${Left} {
+      width: 100%;
+    }
+
+    ${Right} {
+      width: 100%;
+    }
+
+    ${Box} {
+      margin-top: 2rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    padding: 2rem;
+  }
 `;
 
 const Title = styled(Text).attrs({
@@ -203,28 +295,10 @@ const Benja = styled.img.attrs({
   margin: 0 0.5rem 0 0.5rem;
 `;
 
-const StyledText = styled(Text).attrs({
-  assistant: true,
-})`
-  color: ${props => props.theme.grayText};
-  white-space: pre-line;
-  line-height: 35px;
-  font-size: 23px;
-  margin-bottom: 0.55rem;
-
-  :last-child {
-    margin-bottom: 0;
-  }
-
-  span {
-    font-family: 'Assistant';
-    font-weight: 600;
-  }
-`;
-
 const List = styled.div<any>`
   display: flex;
   flex-direction: ${props => props.direction || 'row'};
+  margin-top: 1.5rem;
 `;
 
 const Link = styled(Text).attrs({
@@ -241,89 +315,4 @@ const Link = styled(Text).attrs({
     transform: translateY(${props => (props.noHover ? 0 : '-2.5px')});
     transition: 0.25s;
   }
-`;
-
-const Box = styled.div`
-  box-shadow: 0px 4px 50px rgba(233, 233, 233, 0.51);
-  padding: 2rem;
-`;
-
-const WorkTree = styled.ul`
-  display: flex;
-  flex-direction: column;
-  list-style-type: none;
-`;
-
-const WorkEntry = styled.li`
-  position: relative;
-  font-family: 'Assistant';
-  font-weight: 600;
-  font-size: 20px;
-  margin: 0 0 1rem 1rem;
-
-  :last-child {
-    margin-bottom: 0;
-  }
-
-  /* First child shouldn't have the long line linking to the element before */
-  :not(:first-child) {
-    &:before {
-      position: absolute;
-      content: '';
-      height: 84px;
-      width: 1px;
-      left: -15px;
-      top: -70px;
-      background: ${props => props.theme.bar};
-    }
-  }
-
-  &:before {
-    position: absolute;
-    content: '';
-    height: 15px;
-    width: 1px;
-    left: -15px;
-    top: -1px;
-    background: ${props => props.theme.bar};
-  }
-
-  &:after {
-    content: '';
-    position: absolute;
-    transform: rotate(90deg);
-    height: 10px;
-    width: 1px;
-    top: 9px;
-    left: -10px;
-    background: ${props => props.theme.bar};
-  }
-`;
-
-const Company = styled(Text).attrs({
-  assistant: true,
-  semibold: true,
-})<any>`
-  margin-left: 0.25rem;
-  font-size: 20px;
-  color: ${props => props.theme.grayText};
-`;
-
-const Position = styled(Text).attrs({
-  assistant: true,
-})<any>`
-  margin-left: 0.25rem;
-  font-size: 17px;
-  color: ${props => props.theme.lightGrayText};
-`;
-
-const Duration = styled(Text).attrs({
-  assistant: true,
-  semibold: true,
-})<any>`
-  margin-left: 0.25rem;
-  font-size: 15px;
-  color: ${props => props.theme.lightGrayText};
-  text-transform: uppercase;
-  opacity: 0.5;
 `;

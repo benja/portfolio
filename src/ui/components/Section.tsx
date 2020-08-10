@@ -26,13 +26,16 @@ const Container = styled.div`
 `;
 
 const Title = styled(Text).attrs({
-  roboto: true,
-  fontSize: 20,
+  assistant: true,
+  semibold: true,
+  fontSize: 18,
 })`
   display: flex;
+  opacity: 0.5;
   flex-direction: column;
   color: ${props => props.theme.lightGrayText};
   position: relative;
   width: fit-content;
+  text-transform: uppercase;
   margin-bottom: 1rem;
 `;
