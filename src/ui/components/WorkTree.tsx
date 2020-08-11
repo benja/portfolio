@@ -19,7 +19,7 @@ export const WorkTree = ({ positions }: WorkTreeProps) => {
     <Container>
       {positions && positions.length > 0
         ? positions.map((entry: IPosition, index: number) => (
-            <WorkEntry>
+            <WorkEntry key={index}>
               <Company>{entry.company}</Company>
               <Position>{entry.position}</Position>
               <Duration>{entry.duration}</Duration>
@@ -52,10 +52,10 @@ const WorkEntry = styled.li`
     &:before {
       position: absolute;
       content: '';
-      height: 84px;
+      height: 88px;
       width: 1px;
       left: -15px;
-      top: -70px;
+      top: -74px;
       background: ${props => props.theme.bar};
     }
   }
@@ -74,7 +74,7 @@ const WorkEntry = styled.li`
     content: '';
     position: absolute;
     transform: rotate(90deg);
-    height: 10px;
+    height: 11px;
     width: 1px;
     top: 9px;
     left: -10px;

@@ -5,7 +5,7 @@ import styled, { ThemeContext } from 'styled-components';
 import { Text } from './Text';
 
 interface SectionProps {
-  title: string;
+  title?: string;
   style?: any;
   children?: any;
 }
@@ -13,7 +13,7 @@ interface SectionProps {
 export const Section = ({ title, style, children }: SectionProps) => {
   return (
     <Container style={{ ...style }}>
-      <Title>/ {title} /</Title>
+      {title && <Title>{title}</Title>}
       {children}
     </Container>
   );
@@ -22,7 +22,7 @@ export const Section = ({ title, style, children }: SectionProps) => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 2.5rem;
+  margin-top: 1.75rem;
 `;
 
 const Title = styled(Text).attrs({
@@ -37,5 +37,5 @@ const Title = styled(Text).attrs({
   position: relative;
   width: fit-content;
   text-transform: uppercase;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 `;

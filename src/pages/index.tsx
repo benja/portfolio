@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import styled, { ThemeContext } from 'styled-components';
+import styled, { ThemeContext, keyframes, createGlobalStyle } from 'styled-components';
 import { useContext, useState, useEffect } from 'react';
 
 // Components
@@ -7,6 +7,8 @@ import { Text } from '../ui/components/Text';
 import { ITheme } from '../ui/themes';
 import { Section } from '../ui/components/Section';
 import { WorkTree, WorkTreeProps } from '../ui/components/WorkTree';
+import { Meta } from '../ui/components/Meta';
+import { Icon } from '../ui/icons/Icon';
 
 interface ILink {
   text: string;
@@ -56,55 +58,59 @@ export default function Home() {
   ]);
 
   return (
-    <WidthLimit>
-      <Container>
-        <Left>
-          <Title>
-            Hey, I'm <Benja src="/images/benja.jpg" /> Benjamin
-          </Title>
+    <>
+      <Meta title="Benjamin Akar" />
+      <WidthLimit>
+        <Container>
+          <Left>
+            <Title>
+              Hey, I'm <Benja src="/images/benja.jpg" />
+              Benjamin
+            </Title>
 
-          {/* Some information about myself */}
-          <Section title="who am i">
-            <StyledText>
-              19-year-old from Oslo, Norway striving to <span>innovate</span> great solutions to modern day problems
-            </StyledText>
-            <StyledText>
-              I specialize within digital design and development, but any activity requiring problem solving and
-              creative thinking is where you will find me.
-            </StyledText>
-          </Section>
-
-          <List direction="row">
-            {links.socials.map((link: ILink, index: number) => (
-              <Link key={index} onClick={link.onClick}>
-                <Line color={theme.purple}>{link.text}</Line>
-              </Link>
-            ))}
-          </List>
-
-          {/* My writings */}
-          {links.writings.length > 0 && (
-            <Section title="writing">
-              <List direction="column">
-                {links.writings.map((link: ILink, index: number) => (
-                  <Link key={index} fontSize={20} onClick={link.onClick} noHover>
-                    <BorderBottom>{link.text}</BorderBottom>
-                  </Link>
-                ))}
-              </List>
+            {/* Some information about myself */}
+            <Section>
+              <StyledText>
+                19-year-old from Oslo, Norway striving to <span>innovate</span> great solutions to modern day problems
+              </StyledText>
+              <StyledText>
+                I specialize within digital design and development, but any activity requiring problem solving and
+                creative thinking is where you will find me.
+              </StyledText>
             </Section>
-          )}
-        </Left>
-        <Right>
-          <Box>
-            <Section style={{ marginTop: 0 }} title="work experience">
-              <WorkTree positions={positions} />
-            </Section>
-            <StyledText fontSize={15}>Contact me for more work references.</StyledText>
-          </Box>
-        </Right>
-      </Container>
-    </WidthLimit>
+
+            <List direction="row" style={{ marginTop: 20 }}>
+              {links.socials.map((link: ILink, index: number) => (
+                <Link key={index} onClick={link.onClick}>
+                  <Line color={theme.linkBackground}>{link.text}</Line>
+                </Link>
+              ))}
+            </List>
+
+            {/* My writings */}
+            {links.writings.length > 0 && (
+              <Section title="writing">
+                <List direction="column">
+                  {links.writings.map((link: ILink, index: number) => (
+                    <Link key={index} fontSize={20} onClick={link.onClick} noHover>
+                      <BorderBottom>{link.text}</BorderBottom>
+                    </Link>
+                  ))}
+                </List>
+              </Section>
+            )}
+          </Left>
+          <Right>
+            <Box>
+              <Section style={{ marginTop: 0 }} title="work experience">
+                <WorkTree positions={positions} />
+              </Section>
+              <StyledText fontSize={15}>Contact me for more work references.</StyledText>
+            </Box>
+          </Right>
+        </Container>
+      </WidthLimit>
+    </>
   );
 }
 
@@ -140,11 +146,12 @@ const StyledText = styled(Text).attrs({
 `;
 
 const Box = styled.div`
-  box-shadow: 0px 4px 50px rgba(233, 233, 233, 0.51);
+  box-shadow: ${props => props.theme.boxShadow};
+  border-radius: 3px;
+  border: 1px solid ${props => props.theme.border};
   padding: 2rem;
   position: relative;
 
-  transition: 0.2s ease-in-out;
   ${StyledText} {
     opacity: 0;
     margin-bottom: 0;
@@ -165,11 +172,12 @@ const Box = styled.div`
 const WidthLimit = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 0 auto;
-  width: 1500px;
+  margin: 5rem auto 0;
+  width: 1350px;
 
-  @media (max-width: 1500px) {
+  @media (max-width: 1350px) {
     width: 100%;
+    margin: 0 auto;
   }
 `;
 
@@ -243,12 +251,12 @@ const Line = styled.div`
 
   &:before {
     content: ' ';
-    height: 10px;
+    height: 8px;
     width: 80%;
-    background: ${props => props.color || 'gray'};
+    background: ${props => props.theme.linkBackground || 'gray'};
     opacity: 0.5;
     position: absolute;
-    bottom: 3px;
+    bottom: 5px;
     z-index: -1;
     transition: 0.25s ease-in-out;
   }
@@ -269,14 +277,13 @@ const BorderBottom = styled.div`
 
     &:before {
       background: ${props => props.theme.text};
-      width: 100%;
     }
   }
 
   &:before {
     content: ' ';
     height: 1px;
-    width: 80%;
+    width: 100%;
     background: ${props => props.theme.border};
     opacity: 0.5;
     position: absolute;
@@ -287,24 +294,55 @@ const BorderBottom = styled.div`
 `;
 
 // Could've named this Avatar, but hey it's me ;p *easter egg*
-const Benja = styled.img.attrs({
-  width: 40,
-  height: 40,
-})`
+const Wave = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg) scale(1.05);
+  }
+  50% {
+    transform: rotate(5deg) scale(1.05);
+  }
+  75% {
+    transform: rotate(-5deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+`;
+
+const Benja = styled.img`
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   margin: 0 0.5rem 0 0.5rem;
+  transition: 0.2s;
+  animation: ${Wave} 2.5s forwards;
+
+  &:hover {
+    transition: 0.2s;
+    width: 100px;
+    height: 100px;
+  }
+
+  @media (max-width: 500px) {
+    &:hover {
+      width: 75px;
+      height: 75px;
+    }
+  }
 `;
 
 const List = styled.div<any>`
   display: flex;
   flex-direction: ${props => props.direction || 'row'};
-  margin-top: 1.5rem;
 `;
 
 const Link = styled(Text).attrs({
   assistant: true,
 })<any>`
-  font-size: 23px;
+  font-size: 20px;
   color: ${props => props.theme.grayText};
   line-height: 35px;
   margin: 0 1.25rem 0.55rem 0;
@@ -312,7 +350,7 @@ const Link = styled(Text).attrs({
 
   transition: 0.25s;
   &:hover {
-    transform: translateY(${props => (props.noHover ? 0 : '-2.5px')});
+    transform: translateY(${props => (props.noHover ? 0 : '-2px')});
     transition: 0.25s;
   }
 `;
