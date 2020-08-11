@@ -9,6 +9,7 @@ import { Section } from '../ui/components/Section';
 import { WorkTree, WorkTreeProps } from '../ui/components/WorkTree';
 import { Meta } from '../ui/components/Meta';
 import { Icon } from '../ui/icons/Icon';
+import { Store } from '../undux/store';
 
 interface ILink {
   text: string;
@@ -17,6 +18,21 @@ interface ILink {
 
 export default function Home() {
   const theme: ITheme = useContext(ThemeContext);
+  const store = Store.useStore(); // Undux store
+
+  const toggleTheme = () => {
+    const currentTheme = store.get('theme');
+
+    if (currentTheme === 'light') {
+      store.set('theme')('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+
+    if (currentTheme === 'dark') {
+      store.set('theme')('light');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   // All links will be in here
   const [links] = useState({
@@ -108,6 +124,9 @@ export default function Home() {
               <StyledText fontSize={15}>Contact me for more work references.</StyledText>
             </Box>
           </Right>
+          <ThemeToggle onClick={toggleTheme}>
+            <Icon name="moon" color={theme.text} />
+          </ThemeToggle>
         </Container>
       </WidthLimit>
     </>
@@ -124,6 +143,31 @@ const Right = styled.div<any>`
   display: flex;
   flex-direction: column;
   width: 30%;
+`;
+
+const ThemeToggle = styled.div`
+  background: ${props => props.theme.text + '15'};
+  border-radius: 50%;
+  padding: 0.5rem;
+  width: fit-content;
+  height: fit-content;
+
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+
+  transition: 0.2s;
+  &:hover {
+    transition: 0.2s;
+    cursor: pointer;
+    background: ${props => props.theme.text + '30'};
+    transform: scale(0.95);
+  }
+
+  &:active {
+    background: ${props => props.theme.text + '40'};
+    transform: scale(0.93);
+  }
 `;
 
 const StyledText = styled(Text).attrs({
@@ -343,7 +387,7 @@ const Link = styled(Text).attrs({
   assistant: true,
 })<any>`
   font-size: 20px;
-  color: ${props => props.theme.grayText};
+  color: ${props => props.theme.text};
   line-height: 35px;
   margin: 0 1.25rem 0.55rem 0;
   cursor: pointer;

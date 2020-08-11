@@ -88,7 +88,7 @@ const Company = styled(Text).attrs({
 })<any>`
   margin-left: 0.25rem;
   font-size: 20px;
-  color: ${props => props.theme.grayText};
+  color: ${props => props.theme.text};
 `;
 
 const Position = styled(Text).attrs({

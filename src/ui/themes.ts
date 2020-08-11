@@ -14,11 +14,11 @@ export interface ITheme {
 export const themes = {
   dark: {
     text: '#eeeeee',
-    grayText: '#eeeeee',
+    grayText: '#c7c7c7',
     lightGrayText: '#dddddd',
     border: '#212121',
     bar: '#eae7e7',
-    boxShadow: '0px 4px 50px rgb(0 0 0 / 16%)',
+    boxShadow: '0px 4px 50px rgb(0 0 0 / 32%)',
 
     background: '#1a1a1a',
     linkBackground: '#baa9ff',

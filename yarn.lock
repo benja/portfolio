@@ -4816,6 +4816,11 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
+rxjs-observable@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/rxjs-observable/-/rxjs-observable-0.0.7.tgz#12d37a52e60f1ed0660838fdc44a94eb23c373ba"
+  integrity sha512-aB3nxdX34jbr+83d2b/OERp/96EKSfx0hns06Tt5Gji49AxIPL/D+RV4+jjolPWW3fxArEi3phOEDx9l+RiCLA==
+
 safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@^5.2.0, safe-buffer@~5.2.0:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
@@ -5405,6 +5410,13 @@ typescript@^3.9.7:
   version "3.9.7"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
   integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
+
+undux@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/undux/-/undux-5.2.0.tgz#dadc1c1320e6af6171dbbd79a600f979149612aa"
+  integrity sha512-oL5vfOodRtuVG0GfQbD/d0t/sjlRwqLoffHbDnaUtARRKu7BV0UHOvbBjdC/B60OvjYztg1VUAOFz4TQHGYU7Q==
+  dependencies:
+    rxjs-observable "^0.0.7"
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
