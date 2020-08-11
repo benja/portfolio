@@ -45,10 +45,10 @@ export const MyApp = ({ Component, pageProps }: AppProps) => {
 };
 
 // Wrapper so we can use Undux hooks in this file
-const Wrapper = ({ Component, pageProps }: AppProps) => {
+const Wrapper = ({ Component, router, pageProps }: AppProps) => {
   return (
     <Store.Container>
-      <MyApp Component={Component} pageProps={pageProps} />
+      <MyApp Component={Component} router={router} pageProps={pageProps} />
     </Store.Container>
   );
 };
