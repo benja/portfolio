@@ -1,77 +1,33 @@
-import Head from 'next/head';
-import styled, { ThemeContext, keyframes, createGlobalStyle } from 'styled-components';
-import { useContext, useState, useEffect } from 'react';
+import styled, { ThemeContext, keyframes, useTheme } from 'styled-components';
+import { useContext, useState } from 'react';
 
 // Components
 import { Text } from '../ui/components/Text';
-import { ITheme } from '../ui/themes';
 import { Section } from '../ui/components/Section';
-import { WorkTree, WorkTreeProps } from '../ui/components/WorkTree';
+import { WorkTree } from '../ui/components/WorkTree';
 import { Meta } from '../ui/components/Meta';
 import { Icon } from '../ui/icons/Icon';
-import { Store } from '../undux/store';
-
-interface ILink {
-  text: string;
-  onClick: () => void;
-}
+import { useDispatch, useSelector } from 'react-redux';
+import { getTheme, setTheme } from '../redux/slices/themeSlice';
+import { links } from '../utils/links';
+import { positions } from '../utils/work';
 
 export default function Home() {
-  const theme: ITheme = useContext(ThemeContext);
-  const store = Store.useStore(); // Undux store
+  const theme = useTheme();
+  const currentTheme = useSelector(getTheme);
+  const dispatch = useDispatch();
 
   const toggleTheme = () => {
-    const currentTheme = store.get('theme');
-
     if (currentTheme === 'light') {
-      store.set('theme')('dark');
       localStorage.setItem('theme', 'dark');
+      dispatch(setTheme({ name: 'dark' }));
     }
 
     if (currentTheme === 'dark') {
-      store.set('theme')('light');
       localStorage.setItem('theme', 'light');
+      dispatch(setTheme({ name: 'light' }));
     }
   };
-
-  // All links will be in here
-  const [links] = useState({
-    socials: [
-      {
-        text: 'Say hello',
-        onClick: () => {
-          window.location.assign('mailto:benjaminakar2001@gmail.com');
-        },
-      },
-      {
-        text: 'twitter',
-        onClick: () => {
-          window.open('https://twitter.com/benjaminakar', '_blank');
-        },
-      },
-      {
-        text: 'github',
-        onClick: () => {
-          window.open('https://github.com/benja', '_blank');
-        },
-      },
-    ],
-    writings: [],
-  });
-
-  // All previous work
-  const [positions] = useState([
-    {
-      company: 'Notify Technology, Inc.',
-      position: 'Frontend Engineer & Designer',
-      duration: 'Apr 2020 - present',
-    },
-    {
-      company: 'Bolteløkka Legesenter',
-      position: 'Full Stack Developer & Designer',
-      duration: 'Dec 2017 - present',
-    },
-  ]);
 
   return (
     <>
@@ -79,17 +35,12 @@ export default function Home() {
       <WidthLimit>
         <Container>
           <Left>
-            <Title>
-              Hey, I'm <Benja src="/images/benja.jpg" />
-              Benjamin
-            </Title>
-
             {/* Some information about myself */}
             <Section>
-              <StyledText>
+              <StyledText fontSize={20}>
                 19-year-old from Oslo, Norway striving to <span>innovate</span> great solutions to modern day problems
               </StyledText>
-              <StyledText>
+              <StyledText fontSize={20}>
                 I specialize within digital design and development, but any activity requiring problem solving and
                 creative thinking is where you will find me.
               </StyledText>
@@ -97,9 +48,9 @@ export default function Home() {
 
             <List direction="row" style={{ marginTop: 20 }}>
               {links.socials.map((link: ILink, index: number) => (
-                <Link key={index} onClick={link.onClick}>
+                <LinkContainer key={index} onClick={link.onClick}>
                   <Line color={theme.linkBackground}>{link.text}</Line>
-                </Link>
+                </LinkContainer>
               ))}
             </List>
 
@@ -107,10 +58,10 @@ export default function Home() {
             {links.writings.length > 0 && (
               <Section title="writing">
                 <List direction="column">
-                  {links.writings.map((link: ILink, index: number) => (
-                    <Link key={index} fontSize={20} onClick={link.onClick} noHover>
+                  {links.writings.map((link: Link, index: number) => (
+                    <LinkContainer key={index} onClick={link.onClick} noHover>
                       <BorderBottom>{link.text}</BorderBottom>
-                    </Link>
+                    </LinkContainer>
                   ))}
                 </List>
               </Section>
@@ -171,12 +122,11 @@ const ThemeToggle = styled.div`
 `;
 
 const StyledText = styled(Text).attrs({
-  assistant: true,
+  regular: true,
 })`
   color: ${props => props.theme.grayText};
   white-space: pre-line;
   line-height: 35px;
-  font-size: 23px;
   margin-bottom: 0.55rem;
 
   :last-child {
@@ -184,7 +134,8 @@ const StyledText = styled(Text).attrs({
   }
 
   span {
-    font-family: 'Assistant';
+    font-family: inherit;
+    font-size: inherit;
     font-weight: 600;
   }
 `;
@@ -263,16 +214,6 @@ const Container = styled.div`
   }
 `;
 
-const Title = styled(Text).attrs({
-  roboto: true,
-  fontSize: 25,
-})`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  color: ${props => props.theme.text};
-`;
-
 const Line = styled.div`
   position: relative;
   font-family: inherit;
@@ -282,7 +223,7 @@ const Line = styled.div`
 
   &:hover {
     &:before {
-      bottom: 5px;
+      bottom: 8px;
       opacity: 0.8;
     }
 
@@ -295,12 +236,12 @@ const Line = styled.div`
 
   &:before {
     content: ' ';
-    height: 8px;
+    height: 5px;
     width: 80%;
     background: ${props => props.theme.linkBackground || 'gray'};
     opacity: 0.5;
     position: absolute;
-    bottom: 5px;
+    bottom: 8px;
     z-index: -1;
     transition: 0.25s ease-in-out;
   }
@@ -378,15 +319,14 @@ const Benja = styled.img`
   }
 `;
 
-const List = styled.div<any>`
+const List = styled.div<{ direction: string }>`
   display: flex;
   flex-direction: ${props => props.direction || 'row'};
 `;
 
-const Link = styled(Text).attrs({
-  assistant: true,
-})<any>`
+const LinkContainer = styled.div<{ noHover?: boolean }>`
   font-size: 20px;
+  font-family: 'Assistant';
   color: ${props => props.theme.text};
   line-height: 35px;
   margin: 0 1.25rem 0.55rem 0;

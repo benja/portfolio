@@ -1,52 +1,51 @@
-import React, { ReactChildren } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 interface TextProps {
-  // Customizable settings
-  roboto?: boolean;
-  assistant?: boolean;
+  regular?: boolean;
   semibold?: boolean;
+  bold?: boolean;
   color?: string;
-  fontSize?: number | string;
-
-  // Customizability
-  style?: any;
-  className?: any;
-  children?: any;
-
-  // Actions
+  fontSize?: number;
   onClick?: () => void;
+
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
+const FONT_WEIGHT_MAP = {
+  regular: 400,
+  semibold: 600,
+  bold: 700,
+} as const;
+
 export const Text = (props: TextProps) => {
-  // Deconstruct some props
-  const { style, className, children, onClick } = props;
+  const style: React.CSSProperties = { ...props.style };
 
-  // Define styles object
-  let styles: {
-    fontFamily?: string;
-    fontWeight?: number;
-    fontSize?: number | string;
-    color?: string;
-    [key: string]: any;
-  } = {
-    fontWeight: 400, // By default font weight is regular (400)
-  };
+  if (props.regular) style.fontWeight = FONT_WEIGHT_MAP.regular;
+  if (props.semibold) style.fontWeight = FONT_WEIGHT_MAP.semibold;
+  if (props.bold) style.fontWeight = FONT_WEIGHT_MAP.bold;
 
-  // Check props and see what styles to append
-  if (props.roboto) styles.fontFamily = 'Roboto Slab';
-  else if (props.assistant) styles.fontFamily = 'Assistant';
+  if (props.color) style.color = props.color;
+  if (props.fontSize) style.fontSize = props.fontSize;
 
-  if (props.semibold) styles.fontWeight = 600;
-  if (props.fontSize) styles.fontSize = props.fontSize;
-  if (props.color) styles.color = props.color;
   return (
-    <StyledText className={className} onClick={onClick} style={{ ...styles, ...style }}>
-      {children}
-    </StyledText>
+    <TextBase
+      onClick={props.onClick}
+      {...props}
+      style={style}
+      className={props.className}
+    >
+      {props.children}
+    </TextBase>
   );
 };
 
-const StyledText = styled.h1`
-  color: #000000;
+const TextBase = styled.p`
+  color: ${(props) => props.theme.text};
+  font-family: 'Assistant', sans-serif;
+  font-size: 15px;
+  margin: 0;
+  padding: 0;
 `;
