@@ -5,6 +5,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { darcula as dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { dateToReadableDate, getPostBySlug, getPostSlugs } from '../../lib/api';
 import Head from 'next/head';
+import Header from '../../ui/components/lifelogs/Header';
 
 export async function getStaticPaths() {
   const posts = getPostSlugs();
@@ -18,6 +19,7 @@ export async function getStaticPaths() {
 }
 
 const components = {
+  pre: props => <div {...props} />,
   code: props => <CodeBlock {...props} />,
 };
 
@@ -60,16 +62,7 @@ export default function Article(props) {
       <Container>
         <Blur />
         <Content>
-          <Title>{props.post.metadata.title}</Title>
-          <SubTitle>
-            {dateToReadableDate(props.post.metadata.date)} by {props.post.metadata?.author?.name}
-            <a href={`https://twitter.com/${props.post.metadata.author.twitter}`} target={'_blank'}>
-              <svg viewBox="328 355 335 276" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 630, 425 A 195, 195 0 0 1 331, 600 A 142, 142 0 0 0 428, 570 A  70,  70 0 0 1 370, 523 A  70,  70 0 0 0 401, 521 A  70,  70 0 0 1 344, 455 A  70,  70 0 0 0 372, 460 A  70,  70 0 0 1 354, 370 A 195, 195 0 0 0 495, 442 A  67,  67 0 0 1 611, 380 A 117, 117 0 0 0 654, 363 A  65,  65 0 0 1 623, 401 A 117, 117 0 0 0 662, 390 A  65,  65 0 0 1 630, 425Z" />
-              </svg>
-            </a>
-          </SubTitle>
-          {/*<Cover src={props.post.metadata.cover} />*/}
+          <Header post={props.post.metadata} />
           <Wrapper>{content}</Wrapper>
         </Content>
       </Container>
@@ -122,43 +115,6 @@ const Content = styled.div`
   }
 `;
 
-const Title = styled.h1`
-  font-size: 25px;
-  color: white;
-  font-weight: bold;
-
-  @media (max-width: 800px) {
-    padding: 20px 20px 10px 20px;
-  }
-`;
-1;
-
-const SubTitle = styled.h3`
-  display: flex;
-  align-items: center;
-  font-size: 17px;
-  font-weight: 400;
-  color: #969696;
-  margin-top: 5px;
-  margin-bottom: 30px;
-
-  a {
-    margin-left: 5px;
-    margin-top: 4px;
-
-    svg {
-      fill: #1da1f2;
-      width: 20px;
-      opacity: 1;
-    }
-  }
-
-  @media (max-width: 800px) {
-    padding: 0 20px;
-    margin-bottom: 8px;
-  }
-`;
-
 const Wrapper = styled.article`
   width: 650px;
   color: #bbbbbb;
@@ -170,18 +126,18 @@ const Wrapper = styled.article`
   }
 
   code {
-    font-family: 'Roboto Mono', monospace !important;
+    font-family: monospace, monospace !important;
   }
 
   pre {
+    font-family: monospace !important;
     background: rgba(100, 100, 100, 0.1) !important;
     border-radius: 5px;
-    font-size: 15px;
   }
 
   small {
     display: flex;
-    font-size: 13px;
+    font-size: 15px;
     margin-bottom: 15px;
   }
 
@@ -261,44 +217,44 @@ const Wrapper = styled.article`
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 23px;
     margin-bottom: 15px;
     color: white;
   }
 
   h2 {
-    font-size: 19px;
+    font-size: 22px;
     margin-bottom: 15px;
     color: white;
   }
 
   h3 {
-    font-size: 18px;
+    font-size: 21px;
     margin-bottom: 15px;
     color: white;
   }
 
   h4 {
-    font-size: 17px;
+    font-size: 20px;
     margin-bottom: 15px;
     color: white;
   }
 
   h5 {
-    font-size: 16px;
+    font-size: 19px;
     margin-bottom: 15px;
     color: white;
   }
 
   h6 {
-    font-size: 15.5px;
+    font-size: 18px;
     margin-bottom: 15px;
     color: white;
   }
 
   p {
-    font-size: 15px;
-    margin-bottom: 15px;
+    font-size: 17.5px;
+    margin-bottom: 20px;
     line-height: 150%;
   }
 
@@ -315,10 +271,4 @@ const Wrapper = styled.article`
     padding-bottom: 2px;
     margin: 20px 0 15px 35px;
   }
-`;
-
-const Cover = styled.img`
-  width: 100%;
-  max-width: 700px;
-  margin-bottom: 20px;
 `;

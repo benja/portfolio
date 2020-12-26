@@ -16,7 +16,7 @@ export default function Lifelogs({ posts }) {
         <SubTitle>By Benjamin Akar</SubTitle>
         <ArticleList>
           {posts.map((article, index) => (
-            <Article first={index} article={article} />
+            <Article article={article} />
           ))}
         </ArticleList>
       </Content>

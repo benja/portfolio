@@ -13,7 +13,6 @@ type Article = {
 
 export interface ArticleProps {
   article: Article;
-  first: number;
 }
 
 export function Article(props: ArticleProps) {
@@ -21,7 +20,7 @@ export function Article(props: ArticleProps) {
 
   return (
     <Container>
-      <Date first={props.first === 0}>{dateToVersionNumber(props.article.metadata.date)}</Date>
+      <Date>{dateToVersionNumber(props.article.metadata.date)}</Date>
       <Title onClick={() => Router.push(`/lifelogs/${props.article.slug}`)}>{props.article.metadata.title}</Title>
     </Container>
   );
@@ -33,7 +32,7 @@ const Container = styled.li`
   margin-bottom: 25px;
 `;
 
-const Date = styled.small<{ first?: boolean }>`
+const Date = styled.small`
   position: absolute;
   border-radius: 4px;
   left: -100px;
@@ -43,7 +42,6 @@ const Date = styled.small<{ first?: boolean }>`
   background: rgba(124, 54, 214, 0.13);
 
   transition: all 0.2s ease-in-out;
-  opacity: ${props => (props.first ? 1 : 0.5)};
 `;
 
 const Title = styled.a`
