@@ -1,8 +1,10 @@
 import renderToString from 'next-mdx-remote/render-to-string';
 import hydrate from 'next-mdx-remote/hydrate';
 import styled from 'styled-components';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { darcula as dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { dateToReadableDate, getPostBySlug, getPostSlugs } from '../../lib/api';
-import React from 'react';
+import Head from 'next/head';
 
 export async function getStaticPaths() {
   const posts = getPostSlugs();
@@ -15,24 +17,63 @@ export async function getStaticPaths() {
   };
 }
 
+const components = {
+  code: props => <CodeBlock {...props} />,
+};
+
 export async function getStaticProps(context) {
   const post = getPostBySlug(context.params.slug);
-  const mdxSource = await renderToString(`${post.content}`, {});
+  const mdxSource = await renderToString(`${post.content}`, { components });
   return { props: { post: post, content: mdxSource } };
 }
 
+const CodeBlock = props => {
+  return (
+    <SyntaxHighlighter language={props.className?.replace(/language-/, '')} style={dark}>
+      {props.children}
+    </SyntaxHighlighter>
+  );
+};
+
 export default function Article(props) {
-  const content = hydrate(props.content, {});
+  const content = hydrate(props.content, { components });
 
   return (
-    <Container>
-      <Blur />
-      <Content>
-        <Title>{props.post.metadata.title}</Title>
-        <SubTitle>{dateToReadableDate(props.post.metadata.date)}</SubTitle>
-        <Wrapper>{content}</Wrapper>
-      </Content>
-    </Container>
+    <>
+      <Head>
+        <title>{props.post.metadata.title}</title>
+        <meta name="description" content={props.post.metadata.excerpt} />
+        <meta name="twitter:site" content={'@' + props.post.metadata.author.twitter} />
+        <meta name="twitter:title" content={props.post.metadata.title} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:description" content={props.post.metadata.excerpt} />
+        <meta name="twitter:creator" content={'@' + props.post.metadata.author.twitter} />
+        <meta name="twitter:image" content={`https://benjaminakar.com${props.post.metadata.cover}`} />
+        <meta property="og:title" content={props.post.metadata.title} />
+        <meta property="og:author" content={props.post.metadata.author.name} />
+        <meta property="og:url" content={`https://benjaminakar.com/lifelogs/${props.post.slug}`} />
+        <meta property="og:description" content={props.post.metadata.excerpt} />
+        <meta property="og:image" content={`https://benjaminakar.com${props.post.metadata.cover}`} />
+        <meta name="keywords" content={props.post.metadata.tags} />
+        <meta property="og:type" content="website" />
+      </Head>
+      <Container>
+        <Blur />
+        <Content>
+          <Title>{props.post.metadata.title}</Title>
+          <SubTitle>
+            {dateToReadableDate(props.post.metadata.date)} by {props.post.metadata?.author?.name}
+            <a href={`https://twitter.com/${props.post.metadata.author.twitter}`} target={'_blank'}>
+              <svg viewBox="328 355 335 276" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 630, 425 A 195, 195 0 0 1 331, 600 A 142, 142 0 0 0 428, 570 A  70,  70 0 0 1 370, 523 A  70,  70 0 0 0 401, 521 A  70,  70 0 0 1 344, 455 A  70,  70 0 0 0 372, 460 A  70,  70 0 0 1 354, 370 A 195, 195 0 0 0 495, 442 A  67,  67 0 0 1 611, 380 A 117, 117 0 0 0 654, 363 A  65,  65 0 0 1 623, 401 A 117, 117 0 0 0 662, 390 A  65,  65 0 0 1 630, 425Z" />
+              </svg>
+            </a>
+          </SubTitle>
+          {/*<Cover src={props.post.metadata.cover} />*/}
+          <Wrapper>{content}</Wrapper>
+        </Content>
+      </Container>
+    </>
   );
 }
 
@@ -44,18 +85,27 @@ const Container = styled.div`
   background: #0a0a0a;
   min-height: 100vh;
   height: 100%;
+  width: 100%;
 `;
 
 const Blur = styled.div`
   width: 1000px;
   height: 1000px;
-  position: absolute;
-  top: -1000px;
+  position: fixed;
+  top: -850px;
   left: 500px;
   z-index: 0;
   opacity: 0.6;
   background: conic-gradient(from 180deg at 50% 50%, #7957ff 0deg, #531cf0 75deg, #141414 273.75deg, #1a1a1a 360deg);
+  background: -webkit-conic-gradient(
+    from 180deg at 50% 50%,
+    #7957ff 0deg,
+    #531cf0 75deg,
+    #141414 273.75deg,
+    #1a1a1a 360deg
+  );
   filter: blur(250px);
+  filter: -webkit-blur(250px);
 `;
 
 const Content = styled.div`
@@ -66,7 +116,8 @@ const Content = styled.div`
   z-index: 100;
   position: relative;
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
+    width: 100%;
     margin-top: 5px;
   }
 `;
@@ -76,37 +127,68 @@ const Title = styled.h1`
   color: white;
   font-weight: bold;
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     padding: 20px 20px 10px 20px;
   }
 `;
+1;
 
 const SubTitle = styled.h3`
+  display: flex;
+  align-items: center;
   font-size: 17px;
   font-weight: 400;
   color: #969696;
   margin-top: 5px;
   margin-bottom: 30px;
-  opacity: 0.5;
 
-  @media (max-width: 700px) {
+  a {
+    margin-left: 5px;
+    margin-top: 4px;
+
+    svg {
+      fill: #1da1f2;
+      width: 20px;
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 800px) {
     padding: 0 20px;
     margin-bottom: 8px;
   }
 `;
 
 const Wrapper = styled.article`
-  width: 500px;
+  width: 650px;
   color: #bbbbbb;
   padding-bottom: 150px;
 
-  @media (max-width: 700px) {
+  @media (max-width: 800px) {
     padding: 20px;
     width: 100%;
   }
 
   code {
-    white-space: pre-wrap;
+    font-family: 'Roboto Mono', monospace !important;
+  }
+
+  pre {
+    background: rgba(100, 100, 100, 0.1) !important;
+    border-radius: 5px;
+    font-size: 15px;
+  }
+
+  small {
+    display: flex;
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+
+  hr {
+    border: 0.5px solid gray;
+    opacity: 0.2;
+    margin: 15px 0 20px;
   }
 
   kbd {
@@ -181,31 +263,37 @@ const Wrapper = styled.article`
   h1 {
     font-size: 20px;
     margin-bottom: 15px;
+    color: white;
   }
 
   h2 {
     font-size: 19px;
     margin-bottom: 15px;
+    color: white;
   }
 
   h3 {
     font-size: 18px;
     margin-bottom: 15px;
+    color: white;
   }
 
   h4 {
     font-size: 17px;
     margin-bottom: 15px;
+    color: white;
   }
 
   h5 {
     font-size: 16px;
     margin-bottom: 15px;
+    color: white;
   }
 
   h6 {
     font-size: 15.5px;
     margin-bottom: 15px;
+    color: white;
   }
 
   p {
@@ -227,4 +315,10 @@ const Wrapper = styled.article`
     padding-bottom: 2px;
     margin: 20px 0 15px 35px;
   }
+`;
+
+const Cover = styled.img`
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 20px;
 `;

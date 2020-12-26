@@ -20,12 +20,13 @@ table {
   border-spacing: 0;
 }
 
-html {
-  min-height: 100vh;
-}
+html { min-height: 100%; }
+body { min-height: 100%; }
 
 body {
   min-height: 100vh;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+
+  background: #0a0a0a;
 }

@@ -52,6 +52,21 @@ const Content = styled.div`
   margin-top: 100px;
   z-index: 100;
   position: relative;
+
+  min-width: 700px;
+  transition: 0.2s all ease-in-out;
+
+  @media (max-width: 1400px) {
+    min-width: 500px;
+  }
+
+  @media (max-width: 950px) {
+    min-width: 400px;
+  }
+
+  @media (max-width: 700px) {
+    min-width: unset;
+  }
 `;
 
 const ArticleList = styled.ul`
