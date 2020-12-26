@@ -9,7 +9,7 @@ import { Meta } from '../ui/components/Meta';
 import { Icon } from '../ui/icons/Icon';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTheme, setTheme } from '../redux/slices/themeSlice';
-import { links } from '../utils/links';
+import { Link, links } from '../utils/links';
 import { positions } from '../utils/work';
 
 export default function Home() {
@@ -47,7 +47,7 @@ export default function Home() {
             </Section>
 
             <List direction="row" style={{ marginTop: 20 }}>
-              {links.socials.map((link: ILink, index: number) => (
+              {links.socials.map((link: Link, index: number) => (
                 <LinkContainer key={index} onClick={link.onClick}>
                   <Line color={theme.linkBackground}>{link.text}</Line>
                 </LinkContainer>
